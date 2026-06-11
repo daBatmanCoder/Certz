@@ -23,6 +23,10 @@ typechain-types/
 **/.env
 **/.env.local
 
+# Issued demo certs / private keys -- never commit
+**/certz-out/
+**/deployments/issued/
+
 # Logs & misc
 *.log
 .history

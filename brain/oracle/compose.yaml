@@ -1,0 +1,16 @@
+# ROFL runs Docker-Compose workloads inside a TEE. This describes the Certz
+# oracle service. `oasis rofl build` measures these containers into the enclave
+# identity that the Sapphire contract attests against.
+services:
+  oracle:
+    build: .
+    image: certz-oracle:latest
+    restart: on-failure
+    environment:
+      CERTZ_NETWORK: sapphire-testnet
+      CERTZ_RPC: https://testnet.sapphire.oasis.io
+      # CERTZ_CA is the deployed ConfidentialCA address.
+      CERTZ_CA: ${CERTZ_CA}
+      # PRIVATE_KEY is provided by the ROFL key management service inside the
+      # TEE; it is NOT stored in this file or the image.
+      PRIVATE_KEY: ${PRIVATE_KEY}

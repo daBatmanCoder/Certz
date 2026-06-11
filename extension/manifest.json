@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Certz Verifier (advisory)",
+  "version": "0.1.0",
+  "description": "Advisory check of whether the current site's domain has a Certz on-chain certificate. Does NOT and cannot change the browser's TLS trust.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Certz Verifier"
+  },
+  "permissions": ["tabs"],
+  "host_permissions": ["https://testnet.sapphire.oasis.io/"]
+}

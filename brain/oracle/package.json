@@ -1,0 +1,14 @@
+{
+  "name": "@certz/oracle",
+  "version": "0.1.0",
+  "description": "Certz DNS-01 oracle. In production runs inside an Oasis ROFL TEE and authorizes the confidential CA to sign after verifying domain ownership.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "start": "node oracle.mjs",
+    "dev": "node oracle.mjs --mode dev --watch"
+  },
+  "dependencies": {
+    "ethers": "^6.13.0"
+  }
+}

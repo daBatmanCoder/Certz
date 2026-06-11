@@ -1,0 +1,38 @@
+# Certz ROFL app manifest TEMPLATE.
+#
+# Do NOT hand-edit the real manifest into existence -- generate it with the
+# Oasis CLI so the enclave measurements are correct:
+#
+#   oasis rofl init            # creates rofl.yaml
+#   oasis rofl create          # registers the app, mints the app id (bytes21)
+#   oasis rofl build           # builds + measures the compose.yaml containers
+#   oasis rofl deploy          # schedules it onto ROFL TEE nodes
+#
+# After `oasis rofl create`, take the resulting app id and bind it on-chain:
+#
+#   ConfidentialCA.setRoflAppId(<appId>)   // owner-only
+#
+# From then on, ConfidentialCA.fulfill() only accepts transactions whose origin
+# is an attested instance of THIS app (via roflEnsureAuthorizedOrigin).
+#
+# The fields below are illustrative of what the generated manifest contains.
+name: certz-oracle
+version: 0.1.0
+tee: tdx
+kind: container
+resources:
+  memory: 512
+  cpus: 1
+  storage:
+    kind: disk-persistent
+    size: 512
+# Secrets (e.g. the oracle signer key) are sealed to the enclave via the ROFL
+# key management service and surfaced as env vars at runtime.
+secrets:
+  - name: PRIVATE_KEY
+deployments:
+  default:
+    network: testnet
+    paratime: sapphire
+    # app_id: <filled in by `oasis rofl create`>
+    # policy / enclave measurements: <filled in by `oasis rofl build`>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Certz Verifier</title>
+    <style>
+      :root {
+        --bg: #0a0a0f;
+        --fg: #e7e7ee;
+        --muted: #8b8b9a;
+        --violet: #8b5cf6;
+        --ok: #34d399;
+        --warn: #fbbf24;
+        --none: #6b7280;
+      }
+      * { box-sizing: border-box; }
+      body {
+        width: 340px;
+        margin: 0;
+        padding: 16px;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      .brand { font-size: 13px; letter-spacing: 0.18em; color: var(--violet); text-transform: uppercase; }
+      .domain { margin: 8px 0 14px; font-size: 16px; word-break: break-all; }
+      .status { border: 1px solid #23232e; border-radius: 10px; padding: 12px; }
+      .status-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+      .status-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
+      .status.ok { border-color: var(--ok); }
+      .status.ok .status-title { color: var(--ok); }
+      .status.none .status-title { color: var(--none); }
+      .status.warn .status-title { color: var(--warn); }
+      .status.pending .status-title { color: var(--muted); }
+      .disclaimer {
+        margin-top: 14px; font-size: 11px; color: var(--muted); line-height: 1.5;
+        border-top: 1px solid #1b1b24; padding-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="brand">Certz</div>
+    <div class="domain" id="domain">—</div>
+    <div class="status pending" id="status">
+      <div class="status-title" id="status-title">Loading…</div>
+      <div class="status-detail" id="status-detail"></div>
+    </div>
+    <div class="disclaimer">
+      Advisory only. Certz is an out-of-band transparency check and does
+      <strong>not</strong> change what your browser's TLS stack trusts. A green
+      result does not mean the HTTPS connection used a Certz certificate.
+    </div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
