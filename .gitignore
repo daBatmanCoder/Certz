@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output / caches
+dist/
+**/dist/
+.next/
+**/.next/
+out/
+**/out/
+cache/
+**/cache/
+artifacts/
+**/artifacts/
+typechain-types/
+**/typechain-types/
+
+# Secrets / local env (only .env / .env.local are secret; .env.example is a template)
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+
+# Logs & misc
+*.log
+.history
+.DS_Store
+deployments.local.json

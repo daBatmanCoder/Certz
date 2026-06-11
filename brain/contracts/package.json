@@ -1,0 +1,23 @@
+{
+  "name": "@certz/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Certz confidential certificate authority contracts for Oasis Sapphire",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:testnet": "hardhat run scripts/deploy.ts --network sapphire-testnet",
+    "node": "hardhat node"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@oasisprotocol/sapphire-hardhat": "^2.22.1",
+    "hardhat": "^2.22.0",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "@oasisprotocol/sapphire-contracts": "^0.2.11",
+    "dotenv": "^16.4.0"
+  }
+}
