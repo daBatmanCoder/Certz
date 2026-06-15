@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+/*
+  Certz design system.
+  Near-black canvas, restrained type, a single confidential-violet accent
+  (a nod to Oasis Sapphire) used sparingly for emphasis and interaction.
+*/
+
+:root {
+  --background: #07070b;
+  --background-soft: #0c0c12;
+  --surface: #101018;
+  --surface-2: #15151f;
+  --foreground: #ececf1;
+  --muted: #8a8a99;
+  --muted-strong: #b4b4c4;
+  --border: #1f1f2b;
+  --border-strong: #2c2c3d;
+
+  /* Confidential violet accent scale */
+  --accent: #8b6dff;
+  --accent-strong: #a78bff;
+  --accent-dim: #6c4ddb;
+  --accent-glow: rgba(139, 109, 255, 0.22);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-soft: var(--background-soft);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-dim: var(--accent-dim);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --animate-pulse-slow: pulse-slow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle grain/vignette to keep the dark canvas from looking flat. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      900px circle at 50% -10%,
+      var(--accent-glow),
+      transparent 55%
+    );
+}
+
+::selection {
+  background: var(--accent-glow);
+  color: var(--foreground);
+}
+
+/* Utilities */
+.font-display {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-feature-settings: "ss01";
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.hairline {
+  border-color: var(--border);
+}
+
+.glass {
+  background: color-mix(in oklab, var(--surface) 80%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+/* Thin custom scrollbar for code/PEM blocks */
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
