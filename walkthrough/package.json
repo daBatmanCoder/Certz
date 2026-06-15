@@ -1,0 +1,23 @@
+{
+  "name": "certz-walkthrough",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A guided, step-by-step tour of the Certz certificate lifecycle on Oasis Sapphire.",
+  "scripts": {
+    "step1": "node step-1-ca-key-in-tee.mjs",
+    "step2": "node step-2-build-tbs.mjs",
+    "step3": "node step-3-request-challenge.mjs",
+    "step4": "node step-4-dns01-challenge.mjs",
+    "step5": "node step-5-fulfill-and-sign.mjs",
+    "step6": "node step-6-assemble-x509.mjs",
+    "step7": "node step-7-verify-chain.mjs",
+    "step8": "node step-8-onchain-registry.mjs",
+    "step9": "node step-9-proof-of-possession.mjs",
+    "all": "node run-all.mjs"
+  },
+  "dependencies": {
+    "@oasisprotocol/sapphire-ethers-v6": "^6.0.1",
+    "ethers": "^6.13.0"
+  }
+}

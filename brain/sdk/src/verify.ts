@@ -30,7 +30,11 @@ export function pemToDer(pem: string): Uint8Array {
     .replace(/-----BEGIN [^-]+-----/g, "")
     .replace(/-----END [^-]+-----/g, "")
     .replace(/\s+/g, "");
-  return new Uint8Array(Buffer.from(body, "base64"));
+  // atob is available in browsers and Node >= 16, so this stays isomorphic.
+  const bin = atob(body);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
 }
 
 function timeToDate(time: Time): Date {

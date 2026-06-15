@@ -1,4 +1,5 @@
 import { p256 } from "@noble/curves/p256";
+import { sha256 } from "@noble/hashes/sha256";
 
 /**
  * A Certz CA signer. Both implementations expose the SAME surface as the
@@ -58,4 +59,46 @@ export class LocalP256Signer implements CertzSigner {
     const sig = p256.sign(sha256Digest, this.privateKey, { prehash: false });
     return sig.toDERRawBytes();
   }
+}
+
+/**
+ * PROOF OF POSSESSION.
+ *
+ * The whole point of client-side verification: a site proves it currently holds
+ * the private key for its Certz-issued certificate by signing a FRESH nonce
+ * chosen by the verifier. Signing a fresh nonce (instead of a static blob) is
+ * what makes this non-replayable — an attacker who merely copies the public
+ * certificate cannot produce a valid signature over the verifier's new nonce.
+ *
+ * The site signs with its leaf PRIVATE key; the verifier checks with the leaf
+ * PUBLIC key it extracted from the (CA-signed, on-chain-anchored) certificate.
+ */
+export function signChallenge(
+  leafPrivateKey: Uint8Array,
+  nonce: Uint8Array,
+): { der: Uint8Array; compact: Uint8Array } {
+  const digest = sha256(nonce);
+  const sig = p256.sign(digest, leafPrivateKey, { prehash: false });
+  return { der: sig.toDERRawBytes(), compact: sig.toCompactRawBytes() };
+}
+
+/**
+ * Verify a proof-of-possession signature over `nonce` against a leaf public key.
+ * Accepts the public key either compressed (33B) or uncompressed (65B), and the
+ * signature either DER-encoded or compact (64B r||s) — whichever the site sent.
+ */
+export function verifyChallenge(
+  leafPublicKey: Uint8Array,
+  nonce: Uint8Array,
+  signature: Uint8Array,
+): boolean {
+  const digest = sha256(nonce);
+  const compact =
+    signature.length === 64
+      ? signature
+      : p256.Signature.fromDER(signature).toCompactRawBytes();
+  return p256.verify(compact, digest, leafPublicKey, {
+    prehash: false,
+    lowS: false,
+  });
 }

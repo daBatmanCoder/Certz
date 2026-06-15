@@ -9,6 +9,8 @@
     "dev": "node oracle.mjs --mode dev --watch"
   },
   "dependencies": {
+    "@oasisprotocol/rofl-client": "^0.1.2",
+    "cborg": "^5.1.1",
     "ethers": "^6.13.0"
   }
 }

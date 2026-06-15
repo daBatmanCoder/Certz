@@ -1,0 +1,7 @@
+{
+  "//": "Lets the Solidity language server resolve node_modules imports (e.g. @oasisprotocol/sapphire-contracts) inside the nested brain/contracts Hardhat project. Without this the editor shows a false 'File import callback not supported' error even though `npx hardhat compile` succeeds.",
+  "solidity.packageDefaultDependenciesDirectory": "node_modules",
+  "solidity.packageDefaultDependenciesContractsDirectory": "",
+  "solidity.monoRepoSupport": true,
+  "solidity.compileUsingRemoteVersion": "v0.8.24+commit.e11b9ed9"
+}

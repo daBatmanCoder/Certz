@@ -11,10 +11,10 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ethers } from "ethers";
-// NOTE: the CLI only sends/reads PUBLIC data (registry state, issuance calldata,
-// and the public DER signature). The confidential CA key is never read, so plain
-// ethers is sufficient. Production clients that pass secrets should additionally
-// wrap the provider with @oasisprotocol/sapphire-paratime for encrypted calldata.
+// State-changing txs are sent through a Sapphire-wrapped signer so the calldata
+// is encrypted end-to-end (green lock on the explorer). Reads here are public
+// (registry state, the DER signature), so a plain provider is fine for those.
+import { wrapEthersSigner } from "@oasisprotocol/sapphire-ethers-v6";
 import {
   buildTbsCertificate,
   finalizeCertificate,
@@ -117,7 +117,7 @@ async function cmdIssue(domain) {
   if (!pk) fail("set PRIVATE_KEY env var (a funded Sapphire testnet key) to issue");
 
   const dep = loadDeployment();
-  const signer = new ethers.Wallet(pk, readProvider());
+  const signer = wrapEthersSigner(new ethers.Wallet(pk, readProvider()));
   const ca = new ethers.Contract(dep.ca, CA_ABI, signer);
 
   const subject = generateSubjectKeyPair();

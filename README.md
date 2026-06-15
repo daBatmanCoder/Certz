@@ -20,8 +20,10 @@ This is a **working research/demo on Sapphire testnet**, proven end to end.
 - It is **not** trusted by normal web browsers. Browser TLS trust requires
   inclusion in root programs (Mozilla/Apple/Microsoft/Chrome) after audits —
   out of scope and not a software task.
-- The browser extension does **soft/advisory** verification only. Chrome has no
-  API to override TLS validation. See
+- The browser extension does **out-of-band** verification only: it checks the CA
+  chain, the on-chain registry, and a **live proof-of-possession** (the site
+  signs a fresh nonce; the extension verifies it against the on-chain-anchored
+  key). It does **not** and cannot override the browser's TLS trust. See
   [`extension/WHY-NOT-HARD.md`](extension/WHY-NOT-HARD.md).
 
 ## Architecture
@@ -54,7 +56,8 @@ flowchart TD
 | [`brain/cli`](brain/cli) | `certz` CLI: `info`, `ca-root`, `verify`, `issue` |
 | [`brain/oracle`](brain/oracle) | DNS-01 oracle daemon + ROFL/Docker scaffolding |
 | [`website`](website) | Next.js marketing + app site (Create / Verify) |
-| [`extension`](extension) | MV3 advisory verifier + the honest limitations doc |
+| [`demo-site`](demo-site) | A sample site that holds a Certz cert and proves possession of its key via `/.well-known/certz/` |
+| [`extension`](extension) | MV3 verifier: CA chain + on-chain registry + live proof-of-possession |
 
 ## Deployed (Sapphire testnet, chainId 23295)
 
@@ -83,7 +86,24 @@ node certz.mjs verify demo.certz.example ../contracts/deployments/issued/demo.ce
 # 4. Oracle (dev mode): real DNS check, owner-gated issuance
 cd ../oracle && npm install
 PRIVATE_KEY=0x... node oracle.mjs --mode dev --watch
+
+# 5. Client-side verification end to end
+cd ../../demo-site && PRIVATE_KEY=0x... npm run issue && npm start  # http://localhost:8788
+cd ../extension && npm install && npm run build                    # bundles the SDK
+#    load extension/ unpacked in chrome://extensions, open the popup on the demo tab
 ```
+
+## Client-side verification (the extension)
+
+The verifier never trusts the site's word. For the current tab it (a) fetches the
+site's Certz certificate, (b) verifies it chains to the **pinned** Certz CA root,
+(c) confirms `sha256(TBSCertificate)` is recorded and not revoked **on-chain**,
+and (d) sends a **fresh random nonce** that the site must sign with its leaf
+private key — then verifies that signature against the public key in the cert
+(WebCrypto P-256). Step (d) is what proves the *live* server is authentic and is
+non-replayable. We **verify a fresh challenge** rather than "recover a key from
+the cert signature": P-256 recovery is non-standard/unsupported in browsers, and
+a static signature proves nothing about the live server.
 
 ## How signing actually works (the novel bit)
 

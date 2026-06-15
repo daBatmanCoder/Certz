@@ -7,32 +7,88 @@
     <style>
       :root {
         --bg: #0a0a0f;
+        --panel: #101018;
+        --panel-2: #151522;
+        --line: #272737;
         --fg: #e7e7ee;
         --muted: #8b8b9a;
         --violet: #8b5cf6;
+        --cyan: #22d3ee;
         --ok: #34d399;
+        --bad: #f87171;
         --warn: #fbbf24;
         --none: #6b7280;
       }
       * { box-sizing: border-box; }
       body {
-        width: 340px;
-        margin: 0;
-        padding: 16px;
-        background: var(--bg);
+        width: 390px; margin: 0; padding: 16px;
+        background:
+          radial-gradient(circle at top left, rgba(139, 92, 246, 0.22), transparent 32%),
+          radial-gradient(circle at bottom right, rgba(34, 211, 238, 0.12), transparent 34%),
+          var(--bg);
         color: var(--fg);
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       }
-      .brand { font-size: 13px; letter-spacing: 0.18em; color: var(--violet); text-transform: uppercase; }
-      .domain { margin: 8px 0 14px; font-size: 16px; word-break: break-all; }
-      .status { border: 1px solid #23232e; border-radius: 10px; padding: 12px; }
-      .status-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+      .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+      .brand-row { display: flex; align-items: center; gap: 10px; }
+      .brand-logo {
+        width: 34px; height: 34px; border-radius: 10px; object-fit: cover;
+        box-shadow: 0 0 24px rgba(139, 92, 246, 0.35);
+      }
+      .brand { font-size: 13px; letter-spacing: 0.22em; color: var(--violet); text-transform: uppercase; }
+      .domain { margin: 8px 0 14px; font-size: 17px; word-break: break-all; line-height: 1.25; }
+      .lock {
+        width: 46px; height: 46px; flex: none; border-radius: 16px;
+        display: grid; place-items: center; font-size: 22px;
+        border: 1px solid var(--line); background: rgba(255,255,255,0.04);
+        color: var(--muted); box-shadow: inset 0 0 22px rgba(255,255,255,0.02);
+      }
+      .lock.ok { color: var(--ok); border-color: rgba(52, 211, 153, 0.65); background: rgba(52, 211, 153, 0.08); }
+      .lock.warn { color: var(--warn); border-color: rgba(251, 191, 36, 0.55); background: rgba(251, 191, 36, 0.08); }
+      .lock.bad, .lock.none { color: var(--bad); border-color: rgba(248, 113, 113, 0.55); background: rgba(248, 113, 113, 0.08); }
+      .status {
+        border: 1px solid var(--line); border-radius: 16px; padding: 14px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+        box-shadow: 0 12px 35px rgba(0,0,0,0.22);
+      }
+      .status-title { font-size: 16px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.02em; }
       .status-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
-      .status.ok { border-color: var(--ok); }
+      .status.ok { border-color: rgba(52, 211, 153, 0.75); }
       .status.ok .status-title { color: var(--ok); }
-      .status.none .status-title { color: var(--none); }
+      .status.none .status-title, .status.bad .status-title { color: var(--bad); }
       .status.warn .status-title { color: var(--warn); }
       .status.pending .status-title { color: var(--muted); }
+      .steps { margin: 14px 0 0; padding: 0; list-style: none; }
+      .step {
+        display: flex; gap: 10px; align-items: flex-start; padding: 9px 10px;
+        margin-bottom: 6px; font-size: 12px; border: 1px solid transparent;
+        border-radius: 12px; background: rgba(255,255,255,0.025);
+      }
+      .step-state {
+        width: 18px; height: 18px; flex: none; text-align: center; color: var(--muted);
+        border-radius: 999px; line-height: 18px; margin-top: -1px;
+      }
+      .step.ok .step-state { color: var(--ok); }
+      .step.bad .step-state { color: var(--bad); }
+      .step.skip .step-state { color: var(--none); }
+      .step-text { color: var(--fg); line-height: 1.4; }
+      .step.skip .step-text, .step.pending .step-text { color: var(--muted); }
+      .details {
+        display: none; margin-top: 14px; border: 1px solid var(--line);
+        border-radius: 14px; overflow: hidden; background: rgba(255,255,255,0.025);
+      }
+      .details.open { display: block; }
+      .details.collapsed .detail-grid { display: none; }
+      .details-toggle {
+        width: 100%; border: 0; border-bottom: 1px solid var(--line); padding: 10px 12px;
+        background: rgba(255,255,255,0.035); color: var(--fg); font: inherit;
+        text-align: left; cursor: pointer;
+      }
+      .detail-grid { padding: 10px 12px; }
+      .detail-row { display: grid; grid-template-columns: 92px 1fr; gap: 10px; padding: 6px 0; font-size: 11px; }
+      .detail-label { color: var(--muted); }
+      .detail-value { color: var(--fg); overflow-wrap: anywhere; line-height: 1.45; }
+      .mono { color: var(--cyan); }
       .disclaimer {
         margin-top: 14px; font-size: 11px; color: var(--muted); line-height: 1.5;
         border-top: 1px solid #1b1b24; padding-top: 10px;
@@ -40,16 +96,44 @@
     </style>
   </head>
   <body>
-    <div class="brand">Certz</div>
-    <div class="domain" id="domain">—</div>
+    <div class="top">
+      <div>
+        <div class="brand-row">
+          <img class="brand-logo" src="Certz-logo.png" alt="" />
+          <div class="brand">Certz</div>
+        </div>
+        <div class="domain" id="domain">—</div>
+      </div>
+      <div class="lock pending" id="lock" aria-hidden="true">⌁</div>
+    </div>
     <div class="status pending" id="status">
       <div class="status-title" id="status-title">Loading…</div>
       <div class="status-detail" id="status-detail"></div>
     </div>
+    <ul class="steps">
+      <li class="step pending" id="s-fetch"><span class="step-state">…</span><span class="step-text">certificate</span></li>
+      <li class="step pending" id="s-chain"><span class="step-state">…</span><span class="step-text">CA chain</span></li>
+      <li class="step pending" id="s-registry"><span class="step-state">…</span><span class="step-text">on-chain registry</span></li>
+      <li class="step pending" id="s-pop"><span class="step-state">…</span><span class="step-text">proof of possession</span></li>
+    </ul>
+    <section class="details" id="details">
+      <button class="details-toggle" id="details-toggle" type="button">Certificate details</button>
+      <div class="detail-grid">
+        <div class="detail-row"><span class="detail-label">Subject</span><span class="detail-value" id="d-subject">—</span></div>
+        <div class="detail-row"><span class="detail-label">Issuer</span><span class="detail-value" id="d-issuer">—</span></div>
+        <div class="detail-row"><span class="detail-label">SAN</span><span class="detail-value" id="d-san">—</span></div>
+        <div class="detail-row"><span class="detail-label">Valid From</span><span class="detail-value" id="d-from">—</span></div>
+        <div class="detail-row"><span class="detail-label">Valid Until</span><span class="detail-value" id="d-until">—</span></div>
+        <div class="detail-row"><span class="detail-label">Fingerprint</span><span class="detail-value mono" id="d-fingerprint">—</span></div>
+        <div class="detail-row"><span class="detail-label">TBS Digest</span><span class="detail-value mono" id="d-tbs">—</span></div>
+        <div class="detail-row"><span class="detail-label">Registry</span><span class="detail-value mono" id="d-registry">—</span></div>
+        <div class="detail-row"><span class="detail-label">Nonce Proof</span><span class="detail-value mono" id="d-nonce">—</span></div>
+      </div>
+    </section>
     <div class="disclaimer">
-      Advisory only. Certz is an out-of-band transparency check and does
-      <strong>not</strong> change what your browser's TLS stack trusts. A green
-      result does not mean the HTTPS connection used a Certz certificate.
+      This is an <strong>out-of-band</strong> check layered beside HTTPS. It proves the
+      site holds a Certz-certified key, anchored on-chain — it does not and cannot
+      change what your browser's TLS stack trusts.
     </div>
     <script type="module" src="popup.js"></script>
   </body>

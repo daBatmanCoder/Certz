@@ -218,6 +218,20 @@ export function finalizeCertificate(
 }
 
 /**
+ * Splice a DER ECDSA signature into a finished certificate when you only have
+ * the TBSCertificate as DER bytes (e.g. it was built in another process / step).
+ * The DER round-trips canonically, so the resulting certificate's TBS matches
+ * the digest that was signed and anchored on-chain.
+ */
+export function finalizeCertificateFromTbsDer(
+  tbsDer: Uint8Array,
+  signatureDer: Uint8Array,
+): AssembledCertificate {
+  const tbs = AsnConvert.parse(u8ToAb(tbsDer), TBSCertificate);
+  return finalizeCertificate(tbs, signatureDer);
+}
+
+/**
  * Build a complete X.509 certificate. The body (TBSCertificate) is assembled and
  * DER-encoded locally, SHA-256 hashed, and signed by the provided `signer`
  * (which may be the confidential Sapphire CA). The returned DER ECDSA signature
@@ -275,8 +289,15 @@ export async function assembleLeafCertificate(params: {
   });
 }
 
+/** base64 encode bytes without depending on Node's Buffer (works in browsers too). */
+function bytesToBase64(bytes: Uint8Array): string {
+  let bin = "";
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+
 export function toPem(der: Uint8Array, label: string): string {
-  const b64 = Buffer.from(der).toString("base64");
+  const b64 = bytesToBase64(der);
   const lines = b64.match(/.{1,64}/g) ?? [];
   return `-----BEGIN ${label}-----\n${lines.join("\n")}\n-----END ${label}-----\n`;
 }

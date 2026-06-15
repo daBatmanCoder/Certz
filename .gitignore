@@ -26,9 +26,19 @@ typechain-types/
 # Issued demo certs / private keys -- never commit
 **/certz-out/
 **/deployments/issued/
+# Demo-site holds a LEAF private key to sign challenges -- never commit it.
+demo-site/certs/*.key.pem
+
+# Extension SDK bundle is a build artifact (npm run build regenerates it).
+extension/vendor/
+
+# Walkthrough local state + issued demo certs
+walkthrough/.state.json
+walkthrough/out/
 
 # Logs & misc
 *.log
 .history
 .DS_Store
 deployments.local.json
+demo-site

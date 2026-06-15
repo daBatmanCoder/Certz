@@ -1,12 +1,27 @@
 {
   "manifest_version": 3,
-  "name": "Certz Verifier (advisory)",
-  "version": "0.1.0",
-  "description": "Advisory check of whether the current site's domain has a Certz on-chain certificate. Does NOT and cannot change the browser's TLS trust.",
+  "name": "Certz Verifier",
+  "version": "0.2.1",
+  "description": "Client-side verification of a site's Certz certificate: CA chain, on-chain registry, and a live proof-of-possession challenge. Advisory layer beside TLS.",
   "action": {
+    "default_icon": {
+      "16": "Certz-logo.png",
+      "32": "Certz-logo.png",
+      "48": "Certz-logo.png",
+      "128": "Certz-logo.png"
+    },
     "default_popup": "popup.html",
     "default_title": "Certz Verifier"
   },
+  "icons": {
+    "16": "Certz-logo.png",
+    "32": "Certz-logo.png",
+    "48": "Certz-logo.png",
+    "128": "Certz-logo.png"
+  },
   "permissions": ["tabs"],
-  "host_permissions": ["https://testnet.sapphire.oasis.io/"]
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ]
 }

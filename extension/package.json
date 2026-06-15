@@ -1,0 +1,13 @@
+{
+  "name": "certz-extension",
+  "version": "0.2.1",
+  "private": true,
+  "type": "module",
+  "description": "Certz browser extension: client-side proof-of-possession + on-chain verification.",
+  "scripts": {
+    "build": "esbuild ../brain/sdk/dist/index.js --bundle --format=esm --outfile=vendor/certz.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
