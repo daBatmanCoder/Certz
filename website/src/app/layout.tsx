@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   description:
     "Certz is a confidential, on-chain certificate authority built on Oasis Sapphire. The CA key lives inside a TEE, domain ownership is proven with DNS-01, and every issuance is anchored in a public on-chain transparency log.",
   applicationName: "Certz",
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png", type: "image/png" }],
+  },
   openGraph: {
     title: "Certz — A confidential, on-chain certificate authority",
     description:
