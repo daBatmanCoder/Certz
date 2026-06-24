@@ -11,7 +11,7 @@ import {
 import { Badge, Button } from "@/components/ui";
 import { CopyButton, DownloadButton } from "@/components/copy-button";
 import { RegistryRecordCard } from "@/components/registry-record-card";
-import { isDemoPlaceholderDomain } from "@/lib/certz/deployment";
+import { DEPLOYMENT, isDemoPlaceholderDomain } from "@/lib/certz/deployment";
 import { cn } from "@/lib/utils";
 
 type StepId = 1 | 2 | 3 | 4;
@@ -461,6 +461,27 @@ function StepResult({
             </pre>
           </div>
         ) : null}
+
+        <div className="mt-6 rounded-lg border border-border bg-background-soft p-4">
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <FieldLabel>Certz CA root (optional)</FieldLabel>
+            <div className="flex gap-2">
+              <CopyButton value={DEPLOYMENT.caRootPem.trim()} label="Copy CA root" />
+              <DownloadButton
+                value={DEPLOYMENT.caRootPem.trim()}
+                filename="ca-root.pem"
+                label="Download ca-root.pem"
+              />
+            </div>
+          </div>
+          <p className="text-xs leading-relaxed text-muted">
+            Import this into a browser&apos;s certificate authorities store (for example
+            Waterfox or Firefox) if you want native HTTPS trust for Certz-issued
+            certificates. This is optional — the Certz extension verifies
+            certificates without installing the root. Only trust this CA if you
+            understand what a root certificate does.
+          </p>
+        </div>
       </div>
 
       <RegistryRecordCard record={issued.record} />

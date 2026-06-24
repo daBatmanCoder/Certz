@@ -14,6 +14,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { pemToDer, signChallenge } from "@certz/sdk";
+import { DEPLOYMENT } from "@/lib/certz/deployment";
 
 export const runtime = "nodejs";
 
@@ -46,7 +47,12 @@ export async function GET(
 
   try {
     if (file === "certificate.pem") return pemResponse(`${DOMAIN}.pem`);
-    if (file === "ca-root.pem") return pemResponse("ca-root.pem");
+    if (file === "ca-root.pem") {
+      return new Response(DEPLOYMENT.caRootPem.trim(), {
+        status: 200,
+        headers: { "content-type": "application/x-pem-file", ...CORS },
+      });
+    }
 
     if (file === "sign") {
       const nonceHex = (new URL(req.url).searchParams.get("nonce") ?? "").replace(/^0x/, "");
