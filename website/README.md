@@ -93,3 +93,5 @@ may `devFulfill`). The browser never sees this key.
 - The Tailwind theme (colors, fonts) is defined via CSS variables and
   `@theme` in `src/app/globals.css` (Tailwind v4 convention — there is no
   `tailwind.config.js`).
+
+<!-- redeploy trigger: pick up CERTZ_SIGNER_KEY env on Vercel -->
