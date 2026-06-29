@@ -11,6 +11,7 @@ const columns: {
       { label: "Create", href: "/create" },
       { label: "Verify", href: "/verify" },
       { label: "Docs", href: "/docs" },
+      { label: "Privacy", href: "/privacy" },
     ],
   },
   {
